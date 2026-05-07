@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mente Acolhedora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="acessibilidade">
+        <h1>Mente Acolhedora</h1>
+        <div class="controles">
+            <button onclick="mudarTamanhoFonte('aumentar')" title="Aumentar Fonte">A+</button>
+            <button onclick="mudarTamanhoFonte('diminuir')" title="Diminuir Fonte">A-</button>
+            <button onclick="alternarContraste()" title="Alto Contraste"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <section class="acolhimento">
+        <h2>Como podemos ajudar agora?</h2>
+        <a href="tel:188" class="btn-urgencia">
+            <i class="fa-solid fa-phone"></i> Ligar CVV (188) - Gratuito
+        </a>
+        <button id="btn-iniciar-respiro" class="btn-respiro">
+            <i class="fa-solid fa-wind"></i> Iniciar Respiro Guiado
+        </button>
+    </section>
+
+    <div id="overlay-respiro" class="escondido">
+        <button id="btn-fechar-respiro">Fechar X</button>
+        <div class="circulo-animado" id="circulo-texto">Prepare-se...</div>
+    </div>
+
+    <nav class="filtros">
+        <button class="filtro-btn ativo" data-idade="todos">Todos</button>
+        <button class="filtro-btn" data-idade="criancas">Crianças</button>
+        <button class="filtro-btn" data-idade="adolescentes">Adolescentes</button>
+        <button class="filtro-btn" data-idade="adultos">Adultos</button>
+    </nav>
+
+    <main id="lista-profissionais" class="container-resultados">
+        </main>
+
+    <nav class="menu-inferior">
+        <a href="index.html" class="ativo"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="biblioteca.html"><i class="fa-solid fa-book-open"></i> Aprender</a>
+        <a href="#"><i class="fa-solid fa-location-dot"></i> Mapa</a>
+    </nav>
+
+    <script>
+        // 1. Nosso "Banco de Dados" temporário
+const profissionais = [
+    {
+        nome: "Dra. Mariana Silva (Neuropediatra)",
+        foco: "Autismo, TDAH, Atrasos",
+        publico: "criancas",
+        distancia: "1.2 km",
+        status: "Aberto agora"
+    },
+    {
+        nome: "Dr. Felipe Costa (Psicólogo Clínico)",
+        foco: "Ansiedade, Conflitos, Depressão",
+        publico: "adultos",
+        distancia: "3.5 km",
+        status: "Aberto agora"
+    },
+    {
+        nome: "CAPS Infantil Regional",
+        foco: "Crises Severas, Acolhimento SUS",
+        publico: "adolescentes",
+        distancia: "2.0 km",
+        status: "Até as 17h"
+    }
+];
+
+// 2. Função para renderizar os cards na tela
+function exibirProfissionais(filtroPublico) {
+    const container = document.getElementById('lista-profissionais');
+    container.innerHTML = ''; // Limpa a lista antes de desenhar de novo
+
+    // Filtra o array com base no botão clicado
+    const profissionaisFiltrados = profissionais.filter(prof => {
+        if (filtroPublico === 'todos') return true;
+        return prof.publico === filtroPublico;
+    });
+
+    // Cria o HTML (o Card) para cada profissional encontrado
+    profissionaisFiltrados.forEach(prof => {
+        const divCard = document.createElement('div');
+        divCard.className = 'card';
+        divCard.innerHTML = `
+            <h3>${prof.nome}</h3>
+            <p><strong>Foco:</strong> ${prof.foco}</p>
+            <p class="distancia"><i class="fa-solid fa-location-dot"></i> ${prof.distancia} de você</p>
+            <p><i class="fa-regular fa-clock"></i> ${prof.status}</p>
+        `;
+        container.appendChild(divCard);
+    });
+}
+
+// 3. Lógica de clique nos botões de Filtro
+const botoesFiltro = document.querySelectorAll('.filtro-btn');
+botoesFiltro.forEach(botao => {
+    botao.addEventListener('click', () => {
+        // Remove a classe 'ativo' de todos e coloca só no que foi clicado
+        botoesFiltro.forEach(b => b.classList.remove('ativo'));
+        botao.classList.add('ativo');
+        
+        // Pega a palavra (criancas, adultos, etc) e chama a função de desenhar
+        const publicoSelecionado = botao.getAttribute('data-idade');
+        exibirProfissionais(publicoSelecionado);
+    });
+});
+
+// 4. Lógica de Acessibilidade
+let tamanhoFonteAtual = 16;
+function mudarTamanhoFonte(acao) {
+    if (acao === 'aumentar' && tamanhoFonteAtual < 24) tamanhoFonteAtual += 2;
+    if (acao === 'diminuir' && tamanhoFonteAtual > 14) tamanhoFonteAtual -= 2;
+    document.documentElement.style.setProperty('--tamanho-base', `${tamanhoFonteAtual}px`);
+}
+
+function alternarContraste() {
+    document.body.classList.toggle('alto-contraste');
+}
+
+// Inicializa a página mostrando 'todos'
+exibirProfissionais('todos');
+    </script>
+    <script>
+        const btnIniciarRespiro = document.getElementById('btn-iniciar-respiro');
+const btnFecharRespiro = document.getElementById('btn-fechar-respiro');
+const overlayRespiro = document.getElementById('overlay-respiro');
+const circuloTexto = document.getElementById('circulo-texto');
+
+let intervaloRespiro;
+
+btnIniciarRespiro.addEventListener('click', () => {
+    overlayRespiro.classList.remove('escondido');
+    iniciarCiclo();
+});
+
+btnFecharRespiro.addEventListener('click', () => {
+    overlayRespiro.classList.add('escondido');
+    clearInterval(intervaloRespiro);
+    circuloTexto.classList.remove('inspirar', 'expirar');
+});
+
+function iniciarCiclo() {
+    function ciclo() {
+        // Fase 1: Inspirar (4 segundos)
+        circuloTexto.textContent = "Inspire (4s)";
+        circuloTexto.classList.remove('expirar');
+        circuloTexto.classList.add('inspirar');
+
+        setTimeout(() => {
+            // Fase 2: Segurar (7 segundos)
+            circuloTexto.textContent = "Segure (7s)";
+            
+            setTimeout(() => {
+                // Fase 3: Expirar (8 segundos)
+                circuloTexto.textContent = "Expire (8s)";
+                circuloTexto.classList.remove('inspirar');
+                circuloTexto.classList.add('expirar');
+            }, 7000); // Espera os 7s de segurar
+
+        }, 4000); // Espera os 4s de inspirar
+    }
+
+    ciclo(); // Roda a primeira vez
+    intervaloRespiro = setInterval(ciclo, 19000); // Repete a cada 19 segundos (4+7+8)
+}
+    </script>
+<style>
+    /* Variáveis de Cores e Estilos Base */
+:root {
+    --cor-fundo: #f0fdf4;
+    --cor-primaria: #059669;
+    --cor-texto: #1e293b;
+    --cor-branco: #ffffff;
+    --tamanho-base: 16px;
+}
+
+/* Modo Alto Contraste */
+body.alto-contraste {
+    --cor-fundo: #121212;
+    --cor-primaria: #bb86fc;
+    --cor-texto: #ffffff;
+    --cor-branco: #1e1e1e;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-size: var(--tamanho-base);
+    padding-bottom: 70px; /* Espaço para o menu inferior */
+}
+
+/* Header e Acessibilidade */
+header.acessibilidade {
+    background-color: var(--cor-primaria);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header h1 { margin: 0; font-size: 1.2rem; }
+.controles button {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+/* Acolhimento e Botões */
+.acolhimento { padding: 20px; text-align: center; }
+.btn-urgencia, .btn-respiro {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.btn-urgencia { background-color: #dc2626; color: white; }
+.btn-respiro { background-color: var(--cor-branco); color: var(--cor-primaria); border: 2px solid var(--cor-primaria); }
+
+/* Filtros */
+.filtros {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 20px;
+    gap: 10px;
+}
+.filtro-btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--cor-primaria);
+    background: var(--cor-branco);
+    color: var(--cor-texto);
+    cursor: pointer;
+    white-space: nowrap;
+}
+.filtro-btn.ativo { background-color: var(--cor-primaria); color: white; }
+
+/* Cards de Profissionais */
+.container-resultados { padding: 20px; }
+.card {
+    background-color: var(--cor-branco);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.card h3 { margin: 0 0 5px 0; color: var(--cor-primaria); }
+.card p { margin: 5px 0; font-size: 0.9rem; }
+.distancia { font-weight: bold; color: #dc2626; }
+
+/* Menu Inferior */
+.menu-inferior {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--cor-branco);
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+.menu-inferior a {
+    color: var(--cor-texto);
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+}
+.menu-inferior a.ativo { color: var(--cor-primaria); }
+
+/* Animação do Respiro */
+.escondido { display: none !important; }
+#overlay-respiro {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: var(--cor-fundo);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#btn-fechar-respiro {
+    position: absolute; top: 20px; right: 20px;
+    padding: 10px; background: transparent; border: none; font-size: 1.2rem;
+}
+.circulo-animado {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background-color: var(--cor-primaria);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: transform 4s ease-in-out;
+}
+.circulo-animado.inspirar { transform: scale(1.5); }
+.circulo-animado.expirar { transform: scale(1); transition: transform 8s ease-in-out; }
+</style>
+</body>
+</html>
