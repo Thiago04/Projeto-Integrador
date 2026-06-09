@@ -1,44 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+  </head>
+  <body>
+    <input type="text" id="usuario" placeholder="Usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button onclick="intentarLogin()">Ingresar</button>
+    <div id="resultado"></div>
 
-  <input type="text" id="usuario" placeholder="Usuario">
-  <input type="password" id="password" placeholder="Contraseña">
-  <button onclick="intentarLogin()">Ingresar</button>
-  <div id="resultado"></div>
+    <script>
+      const MAX_INTENTOS = 3;
+      let intentos = 0;
 
-  <script>
-    const MAX_INTENTOS = 3;
-    let intentos = 0;
+      function intentarLogin() {
+        const usuario = document.getElementById("usuario").value.trim();
+        const password = document.getElementById("password").value;
+        const resultado = document.getElementById("resultado");
 
-    function intentarLogin() {
-      const usuario  = document.getElementById("usuario").value.trim();
-      const password = document.getElementById("password").value;
-      const resultado = document.getElementById("resultado");
+        if (intentos >= MAX_INTENTOS) {
+          resultado.innerHTML = "Cuenta bloqueada. Demasiados intentos.";
+          return;
+        }
 
-      if (intentos >= MAX_INTENTOS) {
-        resultado.innerHTML = "Cuenta bloqueada. Demasiados intentos.";
-        return;
+        if (usuario === "" || password === "") {
+          resultado.innerHTML = "Completa todos los campos.";
+          return;
+        }
+
+        if (usuario === "admin" && password === "1234") {
+          resultado.innerHTML = "Login exitoso! Bienvenido, admin.";
+          intentos = 0;
+          window.open("index.html");
+        } else {
+          intentos++;
+          resultado.innerHTML = `Contraseña incorrecta. Intento ${intentos} de ${MAX_INTENTOS}.`;
+        }
       }
-
-      if (usuario === "" || password === "") {
-        resultado.innerHTML = "Completa todos los campos.";
-        return;
-      }
-
-      if (usuario === "admin" && password === "1234") {
-        resultado.innerHTML = "Login exitoso! Bienvenido, admin.";
-        intentos = 0;
-      } else {
-        intentos++;
-        resultado.innerHTML = `Contraseña incorrecta. Intento ${intentos} de ${MAX_INTENTOS}.`;
-      }
-    }
-  </script>
-
-</body>
+    </script>
+  </body>
 </html>
