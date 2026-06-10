@@ -8,22 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Cole todo aquele seu bloco longo de CSS aqui! Resumi para economizar espaço */
         * {
             box-sizing: border-box;
             margin: 0;
-            /* Opcional, mas ajuda a zerar margens indesejadas do navegador */
             padding: 0;
-            /* Opcional, zera paddings padrões */
         }
 
         :root {
             --cor-fundo: #FAF7F2;
-            /* Areia muito claro: aquece a tela e corta a luz azul do celular */
             --cor-primaria: #9B8EAD;
-            /* Lavanda Acinzentado: transmite calma profunda e segurança */
             --cor-texto: #4A4453;
-            /* Roxo muito escuro/chumbo: suaviza a leitura */
             --cor-branco: #FFFFFF;
             --tamanho-base: 16px;
         }
@@ -58,14 +52,28 @@
             font-size: 1.2rem;
         }
 
+        .controles {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Ajuda a espaçar os grupos de botões */
+        }
+
         .controles button {
             background: transparent;
             border: 1px solid white;
             color: white;
             padding: 5px 10px;
             border-radius: 5px;
-            margin-left: 5px;
             cursor: pointer;
+        }
+
+        /* Classe para a saudação */
+        .saudacao {
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: none;
+            /* Escondido por padrão */
         }
 
         .acolhimento {
@@ -232,10 +240,19 @@
     <header class="acessibilidade">
         <h1>Mente Acolhedora</h1>
         <div class="controles">
-            <button id="btn-aumentar-fonte" title="Aumentar Fonte">A+</button>
-            <button id="btn-diminuir-fonte" title="Diminuir Fonte">A-</button>
-            <button id="btn-alto-contraste" title="Alto Contraste"><i
-                    class="fa-solid fa-circle-half-stroke"></i></button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="texto-saudacao" class="saudacao">Olá, Admin</span>
+
+                <button id="btn-cadastro" onclick="window.location.href='cadastro.html'">Cadastro</button>
+                <button id="btn-login" onclick="window.location.href='login.html'">Login</button>
+            </div>
+
+            <div style="display: flex; gap: 4px;">
+                <button id="btn-aumentar-fonte" title="Aumentar Fonte">A+</button>
+                <button id="btn-diminuir-fonte" title="Diminuir Fonte">A-</button>
+                <button id="btn-alto-contraste" title="Alto Contraste"><i
+                        class="fa-solid fa-circle-half-stroke"></i></button>
+            </div>
         </div>
     </header>
 
@@ -263,7 +280,7 @@
     <nav class="menu-inferior">
         <a href="index.html" class="ativo"><i class="fa-solid fa-house"></i> Início</a>
         <a href="biblioteca.html"><i class="fa-solid fa-book-open"></i> Aprender</a>
-        <a href="#"><i class="fa-solid fa-location-dot"></i> Mapa</a>
+        <a href="mapa.html"><i class="fa-solid fa-location-dot"></i> Mapa</a>
     </nav>
 
     <script src="BancoDeDados.js"></script>
@@ -272,7 +289,7 @@
     <script src="ListaInterface.js"></script>
 
     <script>
-        // 1. Instanciamos a Acessibilidade e o Respiro (funcionam sozinhos)
+        // 1. Instanciamos a Acessibilidade e o Respiro
         const appAcessibilidade = new Acessibilidade();
         const appRespiro = new RespiroGuiado();
 
@@ -284,6 +301,33 @@
 
         // 4. Dizemos para a Interface iniciar mostrando 'todos'
         interfaceGrafica.renderizar('todos');
+
+        // ═══════════════════════════════════════
+        //  LÓGICA DE USUÁRIO LOGADO
+        // ═══════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verifica se no localStorage consta que o usuário logou
+            const isLogado = localStorage.getItem('usuarioLogado') === 'true';
+
+            const btnLogin = document.getElementById('btn-login');
+            const btnCadastro = document.getElementById('btn-cadastro');
+            const textoSaudacao = document.getElementById('texto-saudacao');
+
+            if (isLogado) {
+                // Se estiver logado, mostra a saudação e esconde o botão de cadastro
+                textoSaudacao.style.display = 'inline-block';
+                btnCadastro.style.display = 'none';
+
+                // Transforma o botão "Login" em "Sair"
+                btnLogin.textContent = 'Sair';
+                btnLogin.onclick = () => {
+                    // Limpa o login do navegador
+                    localStorage.removeItem('usuarioLogado');
+                    // Recarrega a página para voltar ao estado original
+                    window.location.reload();
+                };
+            }
+        });
     </script>
 </body>
 

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mente Acolhedora - Criar Conta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ── Reset e Variáveis do Novo App ── */
+        :root {
+            --cor-fundo: #FAF7F2;
+            --cor-primaria: #9B8EAD;
+            --cor-primaria-escura: #817491;
+            --cor-texto: #4A4453;
+            --cor-branco: #FFFFFF;
+            --cor-suave: #EAE6EF;
+            --cor-muted: #7A7585;
+            --tamanho-base: 16px;
+        }
+
+        body.alto-contraste {
+            --cor-fundo: #2A2E35;
+            --cor-primaria: #83A598;
+            --cor-primaria-escura: #6C8A7F;
+            --cor-texto: #E2E8F0;
+            --cor-branco: #3B4252;
+            --cor-suave: #4A4453;
+            --cor-muted: #94A3B8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            font-size: var(--tamanho-base);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* ── Acessibilidade ── */
+        .barra-acessibilidade {
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .barra-acessibilidade span {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .controles-acess button {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-left: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .controles-acess button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ── Estrutura da Página ── */
+        .pagina {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .marca {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .marca-icone {
+            width: 64px;
+            height: 64px;
+            background-color: var(--cor-primaria);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .marca h1 {
+            font-size: 1.8rem;
+            color: var(--cor-primaria);
+        }
+
+        .card-form {
+            background: var(--cor-branco);
+            border-radius: 10px;
+            padding: 32px 28px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-form h2 {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            color: var(--cor-primaria);
+        }
+
+        .card-form .subtitulo {
+            font-size: 0.9rem;
+            color: var(--cor-muted);
+            margin-bottom: 24px;
+        }
+
+        /* ── Etapas ── */
+        .etapas {
+            display: flex;
+            align-items: center;
+            margin-bottom: 26px;
+        }
+
+        .etapa-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .etapa-num {
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 2px solid #e2e8f0;
+            color: var(--cor-muted);
+            background: var(--cor-fundo);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .etapa-num.ativa {
+            border-color: var(--cor-primaria);
+            background: var(--cor-primaria);
+            color: white;
+        }
+
+        .etapa-num.ok {
+            border-color: var(--cor-primaria);
+            background: var(--cor-suave);
+            color: var(--cor-primaria);
+        }
+
+        .etapa-lab {
+            font-size: 0.8rem;
+            color: var(--cor-muted);
+        }
+
+        .etapa-lab.ativa {
+            color: var(--cor-primaria);
+            font-weight: bold;
+        }
+
+        .etapa-linha {
+            flex: 1;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 0 8px;
+            transition: background 0.3s;
+        }
+
+        .etapa-linha.ok {
+            background: var(--cor-primaria);
+        }
+
+        /* ── Campos ── */
+        .campo {
+            margin-bottom: 16px;
+        }
+
+        .campo label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .campo-wrapper {
+            position: relative;
+        }
+
+        .campo-wrapper i.ic {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cor-muted);
+            font-size: 0.9rem;
+        }
+
+        .campo input,
+        .campo select {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1px solid var(--cor-primaria);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--cor-texto);
+            background: var(--cor-branco);
+            outline: none;
+            transition: all 0.2s;
+            -webkit-appearance: none;
+        }
+
+        body.alto-contraste .campo input,
+        body.alto-contraste .campo select {
+            background: var(--cor-fundo);
+            border-color: var(--cor-primaria);
+            color: var(--cor-texto);
+        }
+
+        .campo input:focus,
+        .campo select:focus {
+            box-shadow: 0 0 0 2px var(--cor-primaria);
+        }
+
+        .campo input::placeholder {
+            color: var(--cor-muted);
+            opacity: 0.7;
+        }
+
+        .toggle-senha {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--cor-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+        }
+
+        /* ── Chips ── */
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .chip span {
+            display: inline-block;
+            padding: 6px 13px;
+            border-radius: 10px;
+            border: 1px solid var(--cor-primaria);
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--cor-texto);
+            background: var(--cor-branco);
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .chip input {
+            display: none;
+        }
+
+        .chip input:checked+span {
+            background: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+            color: white;
+            font-weight: bold;
+        }
+
+        .chip:hover span {
+            background: var(--cor-suave);
+        }
+
+        /* ── Força senha ── */
+        .forca-senha {
+            margin-top: 8px;
+            display: none;
+        }
+
+        .forca-senha.vis {
+            display: block;
+        }
+
+        .barras-forca {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .barra-f {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: #e2e8f0;
+            transition: background 0.3s;
+        }
+
+        .barra-f.fraca {
+            background: #d89b9b;
+        }
+
+        .barra-f.media {
+            background: #f59e0b;
+        }
+
+        .barra-f.forte {
+            background: var(--cor-primaria);
+        }
+
+        .txt-forca {
+            font-size: 0.75rem;
+            color: var(--cor-muted);
+            font-weight: bold;
+        }
+
+        /* ── Checkbox ── */
+        .campo-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .campo-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: var(--cor-primaria);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .campo-check label {
+            font-size: 0.85rem;
+            color: var(--cor-muted);
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .campo-check label a {
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* ── Botões ── */
+        .linha-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-voltar {
+            flex: 0 0 auto;
+            padding: 14px 16px;
+            background: var(--cor-fundo);
+            border: 1px solid var(--cor-primaria);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--cor-primaria);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-voltar:hover {
+            background: var(--cor-primaria);
+            color: white;
+        }
+
+        .btn-primario {
+            flex: 1;
+            padding: 14px;
+            background-color: var(--cor-primaria);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn-primario:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primario:active {
+            transform: scale(0.98);
+        }
+
+        /* ── Secoes ── */
+        .secao {
+            display: none;
+        }
+
+        .secao.ativa {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Sucesso ── */
+        .sucesso {
+            text-align: center;
+            padding: 16px 0;
+        }
+
+        .sucesso-ic {
+            width: 70px;
+            height: 70px;
+            background: var(--cor-suave);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 2rem;
+            color: var(--cor-primaria);
+        }
+
+        .sucesso h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--cor-primaria);
+        }
+
+        .sucesso p {
+            font-size: 0.9rem;
+            color: var(--cor-texto);
+            margin-bottom: 22px;
+        }
+
+        /* ── Erro & Rodapé ── */
+        .msg-erro {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            color: #dc2626;
+            margin-bottom: 14px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .msg-erro.vis {
+            display: flex;
+        }
+
+        body.alto-contraste .msg-erro {
+            background: #3d1515;
+            border-color: #7f1d1d;
+            color: #fca5a5;
+        }
+
+        .rodape-card {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.9rem;
+            color: var(--cor-texto);
+        }
+
+        .rodape-card a {
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 440px) {
+            .card-form {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="Auth.js"></script>
+    <script>
+        if (typeof Auth !== 'undefined') {
+            const auth = new Auth();
+            if (auth.estaLogado()) window.location.href = 'index.html';
+        }
+    </script>
+
+    <div class="barra-acessibilidade">
+        <span><i class="fa-solid fa-heart-pulse"></i> Mente Acolhedora</span>
+        <div class="controles-acess">
+            <button id="btn-aumentar-fonte">A+</button>
+            <button id="btn-diminuir-fonte">A-</button>
+            <button id="btn-alto-contraste"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        </div>
+    </div>
+
+    <div class="pagina">
+        <div class="marca">
+            <div class="marca-icone"><i class="fa-solid fa-leaf"></i></div>
+            <h1>Mente Acolhedora</h1>
+        </div>
+
+        <div class="card-form" id="card-form">
+            <h2 id="card-titulo">Criar sua conta</h2>
+            <p class="subtitulo" id="card-sub">Gratuito para sempre. Sem complicações.</p>
+
+            <div class="etapas" id="indicador-etapas">
+                <div class="etapa-item">
+                    <div class="etapa-num ativa" id="n1">1</div>
+                    <span class="etapa-lab ativa" id="l1">Dados</span>
+                </div>
+                <div class="etapa-linha" id="ln12"></div>
+                <div class="etapa-item">
+                    <div class="etapa-num" id="n2">2</div>
+                    <span class="etapa-lab" id="l2">Perfil</span>
+                </div>
+                <div class="etapa-linha" id="ln23"></div>
+                <div class="etapa-item">
+                    <div class="etapa-num" id="n3">3</div>
+                    <span class="etapa-lab" id="l3">Senha</span>
+                </div>
+            </div>
+
+            <div class="msg-erro" id="msg-erro">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="msg-erro-txt"></span>
+            </div>
+
+            <div class="secao ativa" id="s1">
+                <div class="campo">
+                    <label for="nome">Nome completo</label>
+                    <div class="campo-wrapper">
+                        <i class="fa-regular fa-user ic"></i>
+                        <input type="text" id="nome" placeholder="Seu nome" autocomplete="name">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label for="email">E-mail</label>
+                    <div class="campo-wrapper">
+                        <i class="fa-regular fa-envelope ic"></i>
+                        <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label for="tel">Telefone <span style="font-weight:normal; opacity:0.7;">(opcional)</span></label>
+                    <div class="campo-wrapper">
+                        <i class="fa-solid fa-phone ic"></i>
+                        <input type="tel" id="tel" placeholder="(00) 00000-0000" autocomplete="tel">
+                    </div>
+                </div>
+                <button class="btn-primario" id="btn1" type="button">Continuar <i
+                        class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+            <div class="secao" id="s2">
+                <div class="campo">
+                    <label for="faixa">Faixa etária</label>
+                    <div class="campo-wrapper">
+                        <i class="fa-solid fa-calendar ic"></i>
+                        <select id="faixa">
+                            <option value="" disabled selected>Selecione...</option>
+                            <option value="crianca">Criança (até 12 anos)</option>
+                            <option value="adolescente">Adolescente (13–17 anos)</option>
+                            <option value="adulto">Adulto (18–59 anos)</option>
+                            <option value="idoso">Idoso (60+ anos)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>Por que está aqui? <span style="font-weight:normal; opacity:0.7;">(opcional)</span></label>
+                    <div class="chips">
+                        <label class="chip"><input type="checkbox" value="ansiedade"><span>Ansiedade</span></label>
+                        <label class="chip"><input type="checkbox" value="depressao"><span>Depressão</span></label>
+                        <label class="chip"><input type="checkbox" value="tdah"><span>TDAH</span></label>
+                        <label class="chip"><input type="checkbox" value="luto"><span>Luto</span></label>
+                        <label class="chip"><input type="checkbox"
+                                value="relacionamentos"><span>Relacionamentos</span></label>
+                        <label class="chip"><input type="checkbox" value="outro"><span>Outro</span></label>
+                    </div>
+                </div>
+                <div class="linha-btns">
+                    <button class="btn-voltar" id="bv2" type="button"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="btn-primario" id="btn2" type="button">Continuar <i
+                            class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="secao" id="s3">
+                <div class="campo">
+                    <label for="senha">Criar senha</label>
+                    <div class="campo-wrapper">
+                        <i class="fa-solid fa-lock ic"></i>
+                        <input type="password" id="senha" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                        <button class="toggle-senha" id="ts1" type="button" aria-label="Mostrar senha"><i
+                                class="fa-regular fa-eye" id="ic1"></i></button>
+                    </div>
+                    <div class="forca-senha" id="forca">
+                        <div class="barras-forca">
+                            <div class="barra-f" id="b1"></div>
+                            <div class="barra-f" id="b2"></div>
+                            <div class="barra-f" id="b3"></div>
+                            <div class="barra-f" id="b4"></div>
+                        </div>
+                        <span class="txt-forca" id="tf"></span>
+                    </div>
+                </div>
+                <div class="campo">
+                    <label for="confirmar">Confirmar senha</label>
+                    <div class="campo-wrapper">
+                        <i class="fa-solid fa-lock ic"></i>
+                        <input type="password" id="confirmar" placeholder="Repita a senha" autocomplete="new-password">
+                        <button class="toggle-senha" id="ts2" type="button" aria-label="Mostrar confirmação"><i
+                                class="fa-regular fa-eye" id="ic2"></i></button>
+                    </div>
+                </div>
+                <div class="campo-check">
+                    <input type="checkbox" id="termos">
+                    <label for="termos">Concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de
+                            Privacidade</a>. Entendo que meus dados são tratados com sigilo.</label>
+                </div>
+                <div class="linha-btns">
+                    <button class="btn-voltar" id="bv3" type="button"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="btn-primario" id="btn3" type="button">Criar conta <i
+                            class="fa-solid fa-check"></i></button>
+                </div>
+            </div>
+
+            <div class="secao" id="s-ok">
+                <div class="sucesso">
+                    <div class="sucesso-ic"><i class="fa-solid fa-heart"></i></div>
+                    <h3 id="ok-titulo">Conta criada!</h3>
+                    <p id="ok-texto">Bem-vindo(a) à Mente Acolhedora. Estamos aqui sempre que precisar.</p>
+                    <button class="btn-primario" onclick="window.location.href='index.html'" type="button"
+                        style="width:100%">
+                        <i class="fa-solid fa-house"></i> Ir para o início
+                    </button>
+                </div>
+            </div>
+
+            <p class="rodape-card" id="rodape">Já tem conta? <a href="login.html">Entrar</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Acessibilidade
+        let tam = 16;
+        document.getElementById('btn-aumentar-fonte').onclick = () => { if (tam < 24) { tam += 2; document.documentElement.style.setProperty('--tamanho-base', tam + 'px'); } };
+        document.getElementById('btn-diminuir-fonte').onclick = () => { if (tam > 14) { tam -= 2; document.documentElement.style.setProperty('--tamanho-base', tam + 'px'); } };
+        document.getElementById('btn-alto-contraste').onclick = () => document.body.classList.toggle('alto-contraste');
+
+        // Estado
+        let etapa = 1;
+
+        function erro(msg) {
+            const el = document.getElementById('msg-erro');
+            document.getElementById('msg-erro-txt').textContent = msg;
+            el.classList.add('vis');
+        }
+        function limpaErro() { document.getElementById('msg-erro').classList.remove('vis'); }
+
+        function avancar(nova) {
+            document.getElementById('s' + etapa).classList.remove('ativa');
+            // Marca como concluída
+            const n = document.getElementById('n' + etapa);
+            n.classList.remove('ativa'); n.classList.add('ok');
+            n.innerHTML = '<i class="fa-solid fa-check" style="font-size:0.7rem"></i>';
+            document.getElementById('l' + etapa).classList.remove('ativa');
+            if (etapa < 3) document.getElementById('ln' + etapa + (etapa + 1)).classList.add('ok');
+            etapa = nova;
+            document.getElementById('s' + nova).classList.add('ativa');
+            document.getElementById('n' + nova).classList.add('ativa');
+            document.getElementById('l' + nova).classList.add('ativa');
+            limpaErro();
+        }
+
+        function voltar() {
+            const ant = etapa - 1;
+            document.getElementById('s' + etapa).classList.remove('ativa');
+            document.getElementById('n' + etapa).classList.remove('ativa');
+            document.getElementById('l' + etapa).classList.remove('ativa');
+            const n = document.getElementById('n' + ant);
+            n.classList.remove('ok'); n.classList.add('ativa');
+            n.textContent = ant;
+            document.getElementById('l' + ant).classList.add('ativa');
+            if (ant < 3) document.getElementById('ln' + ant + (ant + 1)).classList.remove('ok');
+            etapa = ant;
+            document.getElementById('s' + ant).classList.add('ativa');
+            limpaErro();
+        }
+
+        // Etapa 1
+        document.getElementById('btn1').onclick = () => {
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            if (!nome) { erro('Informe seu nome completo.'); return; }
+            if (!email || !/\S+@\S+\.\S+/.test(email)) { erro('Informe um e-mail válido.'); return; }
+            avancar(2);
+        };
+
+        // Etapa 2
+        document.getElementById('btn2').onclick = () => {
+            if (!document.getElementById('faixa').value) { erro('Selecione sua faixa etária.'); return; }
+            avancar(3);
+        };
+        document.getElementById('bv2').onclick = voltar;
+
+        // Força da senha
+        document.getElementById('senha').addEventListener('input', function () {
+            const v = this.value;
+            const fEl = document.getElementById('forca');
+            fEl.classList.toggle('vis', v.length > 0);
+            let p = 0;
+            if (v.length >= 8) p++;
+            if (/[A-Z]/.test(v)) p++;
+            if (/[0-9]/.test(v)) p++;
+            if (/[^A-Za-z0-9]/.test(v)) p++;
+            ['b1', 'b2', 'b3', 'b4'].forEach((id, i) => {
+                const el = document.getElementById(id);
+                el.className = 'barra-f';
+                if (i < p) el.classList.add(p <= 1 ? 'fraca' : p <= 2 ? 'media' : 'forte');
+            });
+            document.getElementById('tf').textContent = ['', 'Fraca', 'Média', 'Forte', 'Muito forte'][p] || '';
+        });
+
+        // Etapa 3
+        document.getElementById('bv3').onclick = voltar;
+        document.getElementById('btn3').onclick = () => {
+            const senha = document.getElementById('senha').value;
+            const conf = document.getElementById('confirmar').value;
+            const termos = document.getElementById('termos').checked;
+            if (senha.length < 8) { erro('A senha precisa ter ao menos 8 caracteres.'); return; }
+            if (senha !== conf) { erro('As senhas não coincidem.'); return; }
+            if (!termos) { erro('Aceite os Termos de Uso para continuar.'); return; }
+
+            // Lógica de Cadastro mantida
+            if (typeof Auth !== 'undefined') {
+                const auth = new Auth();
+                const motivos = [...document.querySelectorAll('.chip input:checked')].map(c => c.value);
+                const resultado = auth.cadastrar({
+                    nome: document.getElementById('nome').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    telefone: document.getElementById('tel').value,
+                    faixaEtaria: document.getElementById('faixa').value,
+                    motivos,
+                    senha
+                });
+
+                if (resultado.sucesso) {
+                    // Mostra tela de sucesso
+                    ['s3', 'indicador-etapas', 'msg-erro', 'rodape'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.style.display = 'none';
+                    });
+                    document.getElementById('card-titulo').style.display = 'none';
+                    document.getElementById('card-sub').style.display = 'none';
+                    const primeiroNome = resultado.usuario.nome.split(' ')[0];
+                    document.getElementById('ok-titulo').textContent = `Olá, ${primeiroNome}!`;
+                    document.getElementById('s-ok').classList.add('ativa');
+                } else {
+                    erro(resultado.mensagem);
+                }
+            } else {
+                // Comportamento genérico de sucesso caso Auth.js não esteja presente
+                ['s3', 'indicador-etapas', 'msg-erro', 'rodape'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = 'none';
+                });
+                document.getElementById('card-titulo').style.display = 'none';
+                document.getElementById('card-sub').style.display = 'none';
+                document.getElementById('ok-titulo').textContent = `Conta criada!`;
+                document.getElementById('s-ok').classList.add('ativa');
+            }
+        };
+
+        // Toggles de senha
+        function toggleSenha(btnId, inputId, iconeId) {
+            document.getElementById(btnId).onclick = function () {
+                const inp = document.getElementById(inputId);
+                const ic = document.getElementById(iconeId);
+                const mostrar = inp.type === 'password';
+                inp.type = mostrar ? 'text' : 'password';
+                ic.className = mostrar ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+            };
+        }
+        toggleSenha('ts1', 'senha', 'ic1');
+        toggleSenha('ts2', 'confirmar', 'ic2');
+
+        // Máscara telefone
+        document.getElementById('tel').addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '').substring(0, 11);
+            if (v.length > 6) v = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+            else if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+            else if (v.length > 0) v = `(${v}`;
+            this.value = v;
+        });
+    </script>
+</body>
+
+</html>

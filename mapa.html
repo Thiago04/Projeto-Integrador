@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa de Acolhimento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* ── Reset e Variáveis do Novo App ── */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --cor-fundo: #FAF7F2;
+            --cor-primaria: #9B8EAD;
+            --cor-texto: #4A4453;
+            --cor-branco: #FFFFFF;
+            --tamanho-base: 16px;
+        }
+
+        body.alto-contraste {
+            --cor-fundo: #2A2E35;
+            --cor-primaria: #83A598;
+            --cor-texto: #E2E8F0;
+            --cor-branco: #3B4252;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            font-size: var(--tamanho-base);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* ── Header Acessibilidade (Opcional, para manter o padrão) ── */
+        header.acessibilidade {
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        /* ── Mapa Adaptado ao Novo Estilo ── */
+        #view-mapa {
+            min-height: 100vh;
+            background-color: var(--cor-fundo);
+        }
+
+        .mapa-hero {
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 40px 20px 30px;
+            text-align: center;
+        }
+
+        .mapa-hero h2 {
+            font-size: 1.6rem;
+            margin: 0 0 8px;
+        }
+
+        .mapa-hero p {
+            margin: 0;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .mapa-content {
+            padding: 24px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Cards no padrão do novo app */
+        .mapa-card {
+            background-color: var(--cor-branco);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .mapa-card p {
+            font-size: 0.95rem;
+            margin: 0 0 20px;
+            line-height: 1.6;
+            color: var(--cor-texto);
+        }
+
+        /* Botões no padrão do novo app */
+        .btn-mapa-principal,
+        .btn-mapa-secundario {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 12px;
+            font-family: Arial, sans-serif;
+            transition: transform 0.15s;
+        }
+
+        .btn-mapa-principal:active,
+        .btn-mapa-secundario:active {
+            transform: scale(0.98);
+        }
+
+        .btn-mapa-principal {
+            background-color: var(--cor-primaria);
+            color: white;
+        }
+
+        .btn-mapa-secundario {
+            background-color: var(--cor-fundo);
+            color: var(--cor-primaria);
+            border: 2px solid var(--cor-primaria);
+        }
+
+        .btn-mapa-secundario:hover {
+            background-color: var(--cor-primaria);
+            color: white;
+        }
+
+        /* Box de Informação */
+        .mapa-info {
+            background-color: var(--cor-branco);
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 0.88rem;
+            color: var(--cor-texto);
+            line-height: 1.7;
+            border-left: 4px solid var(--cor-primaria);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .mapa-info strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            color: var(--cor-primaria);
+        }
+
+        /* Status de Geolocalização */
+        .geo-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background-color: var(--cor-branco);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+            color: var(--cor-texto);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .geo-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #83A598;
+            /* Tom verde/suave da sua paleta de contraste */
+            flex-shrink: 0;
+        }
+
+        .geo-dot.carregando {
+            background: #d89b9b;
+            /* Cor de urgência que estava no seu CSS */
+            animation: pulsar 1s infinite;
+        }
+
+        .geo-dot.erro {
+            background: #4A4453;
+        }
+
+        @keyframes pulsar {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* ── Toast Notification ── */
+        #toast-global {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--cor-texto);
+            color: var(--cor-fundo);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        #toast-global.visivel {
+            opacity: 1;
+        }
+
+        /* ── Menu Inferior ── */
+        .menu-inferior {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--cor-branco);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            /* Garante que fique acima de outros elementos */
+        }
+
+        .menu-inferior a {
+            color: var(--cor-texto);
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+            gap: 4px;
+            /* Dá um espacinho entre o ícone e o texto */
+        }
+
+        .menu-inferior a i {
+            font-size: 1.2rem;
+            /* Aumenta um pouquinho o ícone */
+        }
+
+        .menu-inferior a.ativo {
+            color: var(--cor-primaria);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="acessibilidade">
+        <h1><i class="fa-solid fa-map-location-dot"></i> Acolhimento</h1>
+    </header>
+
+    <div id="view-mapa">
+        <div class="mapa-hero">
+            <h2>Mapa de Profissionais</h2>
+            <p>Encontre ajuda perto de você</p>
+        </div>
+
+        <div class="mapa-content">
+            <div class="geo-status" id="geo-status">
+                <span class="geo-dot" id="geo-dot"></span>
+                <span id="geo-texto">Pronto para buscar sua localização</span>
+            </div>
+
+            <div class="mapa-card">
+                <p>
+                    Abre o Google Maps com psicólogos, psiquiatras e centros de saúde
+                    mental próximos à sua localização real.
+                </p>
+                <button class="btn-mapa-principal" onclick="abrirMapaComLocalizacao()">
+                    <i class="fa-solid fa-location-crosshairs"></i> Abrir mapa com minha localização
+                </button>
+                <button class="btn-mapa-secundario" onclick="abrirMapaSemLocalizacao()">
+                    <i class="fa-solid fa-magnifying-glass"></i> Buscar sem compartilhar localização
+                </button>
+            </div>
+
+            <div class="mapa-info">
+                <strong>💡 Como funciona</strong>
+                Ao clicar em "Abrir mapa com minha localização", o navegador pedirá permissão para usar o seu GPS. O
+                Google Maps será aberto focando exatamente na sua região para mostrar os profissionais mais próximos.
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-global"></div>
+
+    <nav class="menu-inferior">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="biblioteca.html"><i class="fa-solid fa-book-open"></i> Aprender</a>
+        <a href="mapa.html" class="ativo"><i class="fa-solid fa-location-dot"></i> Mapa</a>
+    </nav>
+
+    <script>
+        // ═══════════════════════════════════════
+        //  LÓGICA DO MAPA
+        // ═══════════════════════════════════════
+        const TERMOS_BUSCA = "psicólogo OR psiquiatra OR CAPS OR saúde mental";
+        let toastTimer = null;
+
+        function mostrarToast(msg) {
+            const el = document.getElementById("toast-global");
+            el.textContent = msg;
+            el.classList.add("visivel");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove("visivel"), 2800);
+        }
+
+        function setGeoStatus(estado, texto) {
+            const dot = document.getElementById("geo-dot");
+            const txt = document.getElementById("geo-texto");
+            dot.className = "geo-dot" + (estado !== "ok" ? " " + estado : "");
+            txt.textContent = texto;
+        }
+
+        function abrirMapaComLocalizacao() {
+            if (!navigator.geolocation) {
+                mostrarToast("⚠️ Geolocalização não suportada pelo navegador.");
+                abrirMapaSemLocalizacao();
+                return;
+            }
+
+            setGeoStatus("carregando", "Buscando sua localização...");
+            mostrarToast("📍 Obtendo localização...");
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const { latitude: lat, longitude: lng } = pos.coords;
+                    setGeoStatus("ok", "Localização obtida com sucesso ✓");
+
+                    const url = `https://www.google.com/maps/search/$${encodeURIComponent(TERMOS_BUSCA)}/@${lat},${lng},14z`;
+                    window.open(url, "_blank");
+                },
+                (error) => {
+                    console.warn("Erro de localização:", error);
+                    setGeoStatus("erro", "Permissão negada ou erro — abrindo busca geral");
+                    mostrarToast("❌ Não foi possível acessar a localização.");
+                    abrirMapaSemLocalizacao();
+                },
+                { timeout: 8000, enableHighAccuracy: true }
+            );
+        }
+
+        function abrirMapaSemLocalizacao() {
+            const url = `https://www.google.com/maps/search/$${encodeURIComponent(TERMOS_BUSCA)}`;
+            window.open(url, "_blank");
+        }
+    </script>
+</body>
+
+</html>

@@ -7,11 +7,9 @@ class ListaInterface {
         // Configura os cliques em cada botão de filtro
         this.botoesFiltro.forEach(botao => {
             botao.addEventListener('click', (evento) => {
-                // Remove a cor ativa de todos e foca no clicado
                 this.botoesFiltro.forEach(b => b.classList.remove('ativo'));
                 botao.classList.add('ativo');
-                
-                // Extrai a idade selecionada e renderiza
+
                 const publico = botao.getAttribute('data-idade');
                 this.renderizar(publico);
             });
@@ -19,8 +17,8 @@ class ListaInterface {
     }
 
     renderizar(filtroPublico) {
-        this.container.innerHTML = ''; 
-        
+        this.container.innerHTML = '';
+
         // Pede os dados processados para a classe BancoDeDados
         const lista = this.banco.obterPorPublico(filtroPublico);
 
